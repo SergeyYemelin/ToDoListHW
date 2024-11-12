@@ -1,61 +1,76 @@
 //
-//  ViewController.swift
+//  PersonViewController.swift
 //  ToDoListHW
 //
-//  Created by Сергей Емелин on 06.11.2024.
+//  Created by Сергей Емелин on 11.11.2024.
 //
 
 import UIKit
 
-class ViewController: UIViewController {
+class PersonViewController: UIViewController {
     
+    var person: Person!
+   
+    var personIndex: Int!
+
     @IBOutlet weak var textfieldName: UITextField!
     
     @IBOutlet weak var textfieldSurname: UITextField!
     
     @IBOutlet weak var textfieldPhone: UITextField!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        textfieldName.text! = person.name
+        textfieldSurname.text! = person.surname
+        textfieldPhone.text! = person.phone
+        
         // Do any additional setup after loading the view.
     }
-    
-    @IBAction func addPerson(_ sender: Any) {
-        
+    @IBAction func ChangePerson(_ sender: Any) {
+       
         let name = textfieldName.text!
         let surname = textfieldSurname.text!
         let phone = textfieldPhone.text!
         
+        person.name = name
+        person.surname = surname
+        person.phone = phone
         
-        var newPerson = Person(name: name, surname: surname, phone: phone)
-        
+       
         do {
             if let data = UserDefaults.standard.data(forKey: "PersonArray") {
                 
                 var array = try JSONDecoder().decode([Person].self, from: data)
                 
-                array.append(newPerson)
-                
+                array[personIndex] = person
+               
                 let encodedata = try JSONEncoder().encode(array)
                 
                 UserDefaults.standard.set(encodedata, forKey: "PersonArray")
             } else {
                 
-                let encodedata = try JSONEncoder().encode([newPerson])
+                let encodedata = try JSONEncoder().encode([person])
                 
                 UserDefaults.standard.set(encodedata, forKey: "PersonArray")
             }
-            
+                    
         } catch {
             print("unable to encode \(error)")
         }
-        
-        textfieldName.text! = ""
-        textfieldSurname.text! = ""
-        textfieldPhone.text! = ""
-        
     }
+
     
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }
-    
